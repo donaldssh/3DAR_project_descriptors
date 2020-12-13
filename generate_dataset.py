@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import os
 
-def main(path):
+def main(path, out):
     
     descriptors = []
     #keypoints = []
@@ -27,16 +27,19 @@ def main(path):
     descriptors = np.concatenate(descriptors, axis=0)
     print(f"Total descriptors shape: {descriptors.shape}")
     
-    np.savetxt("descriptors_dataset.csv", descriptors, delimiter=",")
+    #np.savetxt(out+".cv", descriptors, delimiter=",")
+    descriptors.tofile(out)
 
 # running example:
-# python generate_dataset.py --path ~/data/portelloDataset/
+# python generate_dataset.py --path ~/data/portelloDataset/ --out descriptors_portello_dataset
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(
             description="Create a csv dataset containing the surf descriptors of the given set of images")
     
     parser.add_argument("--path", required=True, help="path to the dataset")
+    parser.add_argument("--out", help="name of output dataset")
+    
     args = parser.parse_args()
     
-    main(path=args.path)
+    main(path=args.path, out=args.out)
