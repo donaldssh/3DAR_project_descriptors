@@ -13,7 +13,7 @@ int main() {
     cv::Ptr<cv::Feature2D> surf = cv::xfeatures2d::SURF::create();
     cv::Mat image;
     
-    image = cv::imread("./lena.png");
+    image = cv::imread("../lena.png");
     
     cv::Mat mask = cv::Mat(image.size().height, 
                            image.size().width,
