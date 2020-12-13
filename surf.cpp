@@ -29,15 +29,16 @@ int main() {
     // save to a csv all the descriptors
     std::ofstream out("surf_descriptors.csv");
     for(int i=0; i<descriptors.rows; i++){
-        for(int j=0; j<descriptors.cols; j++){
+        for(int j=0; j<descriptors.cols-1; j++){
                 out << (float)descriptors.at<float>(i, j) <<',';
         }
+        out << (float)descriptors.at<float>(i, descriptors.cols-1);
         out << '\n';
     }
     
     std::cout<<"There are "<<descriptors.rows<<" keypoints"<<std::endl;
     std::cout<<"Each surf descriptor has "<<descriptors.cols<<" values"<<std::endl;
-  
+
     cv::waitKey(0);
     return 0;
 }
