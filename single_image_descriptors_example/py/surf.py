@@ -18,6 +18,8 @@ def main(image_path):
     
     # save the descriptors in a csv file
     np.savetxt("surf_descriptors.csv", des, delimiter=",")
+    
+    print(des.shape)
 
     # close when a key is pressed
     cv2.waitKey(0)
