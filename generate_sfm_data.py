@@ -56,7 +56,7 @@ def main(path, out_dir):
     keypoints = []
     
     # Create SURF object with Hessian Threshold, 128 values (extended) 
-    surf = cv2.xfeatures2d.SURF_create(600)
+    surf = cv2.xfeatures2d.SURF_create(300)
     surf.setExtended(True)
     
     for entry in os.scandir(path):
@@ -97,7 +97,7 @@ def main(path, out_dir):
 
         matches = bf.match(descriptors[i], descriptors[j])
         
-        f.write("\n".join(str(match.trainIdx)+" "+str(match.queryIdx) for match in matches))
+        f.write("\n".join(str(match.queryIdx)+" "+str(match.trainIdx) for match in matches))
         f.write("\n\n")
 
     f.close()
