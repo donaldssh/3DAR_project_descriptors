@@ -6,16 +6,16 @@ import os
 def main(path, out):
     
     descriptors = []
-    #keypoints = []
+
+    # Create SURF object with Hessian Threshold, 128 values (extended) 
+    surf = cv2.xfeatures2d.SURF_create(600)
+    surf.setExtended(True)
     
     for entry in os.scandir(path):
         if (entry.path.endswith(".jpg") or entry.path.endswith(".png")) and entry.is_file():
             print(entry.path)
         
             img = cv2.imread(entry.path)
-
-            #Create SURF object with Hessian Threshold = 400
-            surf = cv2.xfeatures2d.SURF_create(400)
 
             #compute the keypoint and feature descriptors
             kp, des = surf.detectAndCompute(img, None)
@@ -27,7 +27,6 @@ def main(path, out):
     descriptors = np.concatenate(descriptors, axis=0)
     print(f"Total descriptors shape: {descriptors.shape}")
     
-    #np.savetxt(out+".cv", descriptors, delimiter=",")
     descriptors.tofile(out)
 
 # running example:
