@@ -3,6 +3,7 @@ import numpy as np
 import argparse
 import os
 from  itertools import combinations
+from tqdm import tqdm
 
 """
 ###################################################################################################
@@ -46,16 +47,16 @@ it will be done the combination of each image with all the others
 ###################################################################################################
 """
 
-
 def main(path, out_dir):
-
-    os.makedirs(out_dir, exist_ok=True)
+    
+    descriptors_dir = "/desc"
+    os.makedirs(out_dir+descriptors_dir, exist_ok=True)
 
     image_names = []
     descriptors = []
     keypoints = []
     
-    # Create SURF object with Hessian Threshold, 128 values (extended) 
+    # Create SURF object with Hessian Threshold=300, 128 values (extended) 
     surf = cv2.xfeatures2d.SURF_create(300)
     surf.setExtended(True)
     
@@ -74,23 +75,23 @@ def main(path, out_dir):
             keypoints.append(kps)
             descriptors.append(des)
 
-            f = open(out_dir+"/"+image_name+".txt", "w")
+            f = open(out_dir+descriptors_dir+"/"+image_name+".txt", "w")
             f.write(str(len(kps))+" 128\n")
             for kp in kps:
                 coords = [kp.pt[0], kp.pt[1], kp.size, kp.angle]
                 f.write(" ".join(str(i) for i in coords))
-                f.write(" "+" ".join(str(0) for i in range(127)))
-                f.write(" 0\n")
+                f.write(" "+" ".join(str(0) for i in range(128)))
+                f.write("\n")
             f.close()
     
     
     # find matches between each combinations of 2 images in the dataset
 
-    f = open(out_dir+"/"+"mmm_file.txt", "w")
-    for ids in combinations(range(len(image_names)), 2):
+    f = open(out_dir+"/mmm_file.txt", "w")
+    for ids in tqdm(combinations(range(len(image_names)), 2)):
         i = ids[0]
         j = ids[1]
-        f.write(image_names[i] + " "+ image_names[j]+"\n")
+        f.write(image_names[i]+" "+image_names[j]+"\n")
         
         #feature matching
         bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
@@ -110,7 +111,7 @@ if __name__ == "__main__":
             description="Create the descriptors and matches file for sfm reconstruction with colmap")
     
     parser.add_argument("--path", required=True, help="path to the dataset")
-    parser.add_argument("--out", help="name of output folder")
+    parser.add_argument("--out", help="path of the output folder")
     
     args = parser.parse_args()
     
