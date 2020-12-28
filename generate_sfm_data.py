@@ -7,10 +7,17 @@ from tqdm import tqdm
 
 """
 ###################################################################################################
+generate colmap SFM data
+
+output_dir/
+├─ desc/
+│  ├─ image_name_0.txt
+│  ..
+│  ├─ image_name_k.txt
+├─ mmm_file.txt
 
 For every image create a text file i.e. "01.jpg" -> "01.jpg.txt" with the following format
 given N descriptors:
-
 
 N 128 (number of features of the descriptor)
 u_keypoint v_keypoint scale orientation 0 0 0 .... 0 (128 zeros)
@@ -19,7 +26,6 @@ u_keypoint v_keypoint scale orientation 0 0 0 .... 0 (128 zeros)
 .
 .
 u_keypoint v_keypoint scale orientation 0 0 0 .... 0 (128 zeros)
-
 
 I set all zeros because I dont want that colmap does the matching from this.
 The matches will be provided to colmap by the following file.
@@ -42,7 +48,6 @@ k l
 .
 .
 .
-
 it will be done the combination of each image with all the others
 ###################################################################################################
 """
@@ -56,8 +61,8 @@ def main(path, out_dir):
     descriptors = []
     keypoints = []
     
-    # Create SURF object with Hessian Threshold=300, 128 values (extended) 
-    surf = cv2.xfeatures2d.SURF_create(300)
+    # Create SURF object with Hessian Threshold=600, 128 values (extended) 
+    surf = cv2.xfeatures2d.SURF_create(600)
     surf.setExtended(True)
     
     for entry in os.scandir(path):
