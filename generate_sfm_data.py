@@ -56,8 +56,8 @@ def main(path, out_dir):
     descriptors = []
     keypoints = []
     
-    # Create SURF object with Hessian Threshold=300, 128 values (extended) 
-    surf = cv2.xfeatures2d.SURF_create(300)
+    # Create SURF object with Hessian Threshold=600, 128 values (extended) 
+    surf = cv2.xfeatures2d.SURF_create(600)
     surf.setExtended(True)
     
     for entry in os.scandir(path):
