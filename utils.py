@@ -113,3 +113,16 @@ class Surf3DReshape():
         channels = np.dstack(channels)
         channels = np.transpose(channels, (2,0,1))
         return channels
+
+class Surf3DInverseReshape():
+    def __call__(self, desc):
+        channel = []
+        for i in range(16):
+            for j in range(8):
+                channel.append(desc[j*16+i])
+                
+        return np.array(channel)
+
+
+
+

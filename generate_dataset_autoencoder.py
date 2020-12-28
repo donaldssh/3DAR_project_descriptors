@@ -37,10 +37,10 @@ in binary composed by the 128 values of every surf descriptors in every image.
 Example:
 
 train_set:
-    python generate_dataset.py --paths ~/data/portelloDataset/ ~/data/castle-P19/ --out train_set.bin
+    python generate_dataset_autoencoder.py --paths ~/data/portelloDataset/ ~/data/castle-P19/ --out train_set.bin
     
 test_set:
-    python generate_dataset.py --paths ~/data/fountain-P11/ ~/data/tisoDataset/ --out test_set.bin
+    python generate_dataset_autoencoder.py --paths ~/data/fountain-P11/ ~/data/tisoDataset/ --out test_set.bin
     
 """
 if __name__ == "__main__":

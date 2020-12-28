@@ -1,2 +1,3 @@
 *.torch
 *.txt
+__pycache__/

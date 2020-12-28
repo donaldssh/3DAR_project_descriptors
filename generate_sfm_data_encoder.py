@@ -25,8 +25,8 @@ def main(path, out):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     # load the best model for the encoder
-    encoder = Encoder(encoded_space_dim=9, conv1_ch=64, conv2_ch=128, conv3_ch=128, fc_ch=128)
-    encoder.load_state_dict(torch.load('best_encoder.torch'))
+    encoder = Encoder(encoded_space_dim=16, conv1_ch=32, conv2_ch=64, conv3_ch=64, fc_ch=64)
+    encoder.load_state_dict(torch.load('best_encoder16.torch'))
     encoder.to(device)
     encoder.eval()
     
