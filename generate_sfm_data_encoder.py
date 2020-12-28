@@ -6,6 +6,16 @@ from  itertools import combinations
 from tqdm import tqdm
 from utils import *
 
+"""
+Format of the output.txt file:
+
+image_name_k number_of_keypoints_image_k
+kp_x kp_y kp_scale kp_orientation encoded_surf descriptors
+....
+image_name_{k+1} number_of_keypoints_image_{K+1}
+kp_x kp_y kp_scale kp_orientation encoded_surf descriptors
+"""
+
 def main(path, out):
     
     # Create SURF object with Hessian Threshold=600, 128 values (extended) 
@@ -39,8 +49,8 @@ def main(path, out):
             with torch.no_grad():
                 des_enc = encoder(next(iter(surf3d_dataloader)).to(device)).cpu().numpy()
 
+            f.write(image_name+" "+str(des.shape[0])+"\n")
             for i in range(len(kps)):
-                f.write(image_name+" ")
                 coords = [kps[i].pt[0], kps[i].pt[1], kps[i].size, kps[i].angle]
                 f.write(" ".join(str(i) for i in coords))
                 f.write(" "+" ".join(str(i) for i in des_enc[i]))
