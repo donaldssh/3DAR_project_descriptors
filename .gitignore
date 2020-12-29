@@ -1,3 +1,5 @@
 *.torch
 *.txt
+*.zip
+*.bin
 __pycache__/
