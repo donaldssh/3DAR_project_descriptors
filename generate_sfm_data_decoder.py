@@ -58,8 +58,8 @@ def main(enc, out_dir):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     # load the best model for the decoder
-    decoder = Decoder(encoded_space_dim=16, conv1_ch=32, conv2_ch=64, conv3_ch=64, fc_ch=64)
-    decoder.load_state_dict(torch.load('best_decoder16.torch'))
+    decoder = DecoderConv(encoded_space_dim=16, conv1_ch=126, conv2_ch=99, conv3_ch=106, fc_ch=59)
+    decoder.load_state_dict(torch.load('best_decoderCNN16_big.torch'))
     decoder.to(device)
     decoder.eval()
 
@@ -83,7 +83,7 @@ def main(enc, out_dir):
 
         des_enc = body.loc[:, 4:].to_numpy()
         with torch.no_grad():
-            des = decoder(torch.from_numpy(des_enc).float().to(device)).cpu().numpy().reshape(-1, 128)
+            des = decoder(torch.from_numpy(des_enc).float().to(device)).cpu().numpy().reshape(-1, 64)
             
             composed_transform = transforms.Compose([Surf3DInverseReshape(), NpToTensor()])
             
@@ -107,7 +107,7 @@ def main(enc, out_dir):
         f.write(image_names[i]+" "+image_names[j]+"\n")
         
         #feature matching
-        bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+        bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
         matches = bf.match(descriptors[i], descriptors[j])
         
@@ -118,7 +118,7 @@ def main(enc, out_dir):
     
 """   
 Example:
-python generate_sfm_data_decoder.py --path foutain_encoded_descr.txt --out sfm_data
+python generate_sfm_data_decoder.py --enc foutain_encoded_descr.txt --out sfm_data
 """
 if __name__ == "__main__":
     

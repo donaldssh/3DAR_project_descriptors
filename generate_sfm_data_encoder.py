@@ -19,14 +19,14 @@ kp_x kp_y kp_scale kp_orientation encoded_surf descriptors
 def main(path, out):
     
     # Create SURF object with Hessian Threshold=600, 128 values (extended) 
-    surf = cv2.xfeatures2d.SURF_create(600)
-    surf.setExtended(True)
+    surf = cv2.xfeatures2d.SURF_create()
+    #surf.setExtended(True)
     
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     # load the best model for the encoder
-    encoder = Encoder(encoded_space_dim=16, conv1_ch=32, conv2_ch=64, conv3_ch=64, fc_ch=64)
-    encoder.load_state_dict(torch.load('best_encoder16.torch'))
+    encoder = EncoderConv(encoded_space_dim=16, conv1_ch=126, conv2_ch=99, conv3_ch=106, fc_ch=59)
+    encoder.load_state_dict(torch.load('best_encoderCNN16_big.torch'))
     encoder.to(device)
     encoder.eval()
     
