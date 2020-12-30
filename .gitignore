@@ -3,3 +3,4 @@
 *.torch
 *.zip
 .ipynb_checkpoints/
+*.txt
