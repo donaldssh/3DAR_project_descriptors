@@ -88,7 +88,7 @@ def main(enc, out_dir):
             composed_transform = transforms.Compose([Surf3DInverseReshape(), NpToTensor()])
             
             des_1d = SurfDataset(pd.DataFrame(des), transform=composed_transform)
-            dl = DataLoader(des_1d, batch_size=len(des), shuffle=True)
+            dl = DataLoader(des_1d, batch_size=len(des), shuffle=False)
             des = next(iter(dl)).to(device).cpu().numpy()
                         
         descriptors.append(des)
@@ -118,7 +118,10 @@ def main(enc, out_dir):
     
 """   
 Example:
-python generate_sfm_data_decoder.py --enc foutain_encoded_descr.txt --out sfm_data
+
+python generate_sfm_data_decoder.py --enc foutain_encoded_descr.txt --out ~/data/compressed/sfm_data_fountain
+
+python generate_sfm_data_decoder.py --enc tiso_encoded_descr.txt --out sfm_data_tiso
 """
 if __name__ == "__main__":
     

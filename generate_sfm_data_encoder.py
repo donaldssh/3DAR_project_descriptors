@@ -18,10 +18,8 @@ kp_x kp_y kp_scale kp_orientation encoded_surf descriptors
 
 def main(path, out):
     
-    # Create SURF object with Hessian Threshold=600, 128 values (extended) 
     surf = cv2.xfeatures2d.SURF_create()
-    #surf.setExtended(True)
-    
+
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     # load the best model for the encoder
@@ -44,7 +42,7 @@ def main(path, out):
  
             composed_transform = transforms.Compose([Surf3DReshape(), NpToTensor()])
             surf3d = SurfDataset(pd.DataFrame(des), transform=composed_transform)
-            surf3d_dataloader = DataLoader(surf3d, batch_size=len(des), shuffle=True)
+            surf3d_dataloader = DataLoader(surf3d, batch_size=len(des), shuffle=False)
             
             with torch.no_grad():
                 des_enc = encoder(next(iter(surf3d_dataloader)).to(device)).cpu().numpy()
@@ -61,6 +59,8 @@ def main(path, out):
 """   
 Example:
 python generate_sfm_data_encoder.py --path ~/data/fountain-P11/images --out foutain_encoded_descr.txt
+
+python generate_sfm_data_encoder.py --path ~/data/tisoDataset --out tiso_encoded_descr.txt
 """
 if __name__ == "__main__":
     
