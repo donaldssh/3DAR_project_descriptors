@@ -63,7 +63,7 @@ def main(path, out_dir):
     
     # Create SURF object with Hessian Threshold=600, 128 values (extended) 
     surf = cv2.xfeatures2d.SURF_create(600)
-    surf.setExtended(True)
+    #surf.setExtended(True)
     
     for entry in os.scandir(path):
         if (entry.path.endswith(".jpg") or entry.path.endswith(".png")) and entry.is_file():
@@ -99,7 +99,7 @@ def main(path, out_dir):
         f.write(image_names[i]+" "+image_names[j]+"\n")
         
         #feature matching
-        bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+        bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
         matches = bf.match(descriptors[i], descriptors[j])
         
@@ -108,8 +108,15 @@ def main(path, out_dir):
 
     f.close()
 
-# running example:
-# python generate_sfm_data.py --path ~/data/fountain-P11/images --out sfm_data
+"""
+running example for test datasets:
+
+python generate_sfm_data.py --path ~/data/fountain-P11/images --out fountain_sfm_data
+
+python generate_sfm_data.py --path ~/data/tisoDataset --out tiso_sfm_data
+
+"""
+
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(

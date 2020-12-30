@@ -38,7 +38,6 @@ k l
 m n
 .
 .
-.
 p q
   
 0002.jpg 0003.jpg           (next couple of images)
@@ -46,8 +45,6 @@ i j
 k l
 .
 .
-.
-
 """
 
 def main(enc, out_dir):
@@ -57,19 +54,18 @@ def main(enc, out_dir):
     
     image_names = []
     descriptors = []
-    keypoints = []
     
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     
     # load the best model for the decoder
-    decoder = Decoder(encoded_space_dim=9, conv1_ch=64, conv2_ch=128, conv3_ch=128, fc_ch=128)
-    decoder.load_state_dict(torch.load('best_decoder.torch'))
+    decoder = DecoderConv(encoded_space_dim=16, conv1_ch=126, conv2_ch=99, conv3_ch=106, fc_ch=59)
+    decoder.load_state_dict(torch.load('best_decoderCNN16_big.torch'))
     decoder.to(device)
     decoder.eval()
 
     cumrow = 1
-    
     header = pd.read_csv(enc, sep=' ', header=None, skiprows=0, nrows=1)
+    
     while(not header.empty):
         image_name, kps_len = header.iloc[0].values
         image_names.append(image_name)
@@ -80,18 +76,23 @@ def main(enc, out_dir):
         f = open(out_dir+descriptors_dir+"/"+image_name+".txt", "w")
         f.write(str(kps_len)+" 128\n")
         for i, row in body.iterrows():
-            coords = row.iloc[0:4]
-            f.write(" ".join(str(i) for i in coords))
+            f.write(" ".join(str(i) for i in row.iloc[0:4]))
             f.write(" "+" ".join(str(0) for i in range(128)))
             f.write("\n")
         f.close()
 
         des_enc = body.loc[:, 4:].to_numpy()
         with torch.no_grad():
-            des = decoder(torch.from_numpy(des_enc).float().to(device)).cpu().numpy().reshape(-1, 128)
-        
+            des = decoder(torch.from_numpy(des_enc).float().to(device)).cpu().numpy().reshape(-1, 64)
+            
+            composed_transform = transforms.Compose([Surf3DInverseReshape(), NpToTensor()])
+            
+            des_1d = SurfDataset(pd.DataFrame(des), transform=composed_transform)
+            dl = DataLoader(des_1d, batch_size=len(des), shuffle=False)
+            des = next(iter(dl)).to(device).cpu().numpy()
+                        
         descriptors.append(des)
-        
+
         try:
             header = pd.read_csv(enc, sep=' ', header=None, skiprows=cumrow, nrows=1)
             cumrow += 1
@@ -106,7 +107,7 @@ def main(enc, out_dir):
         f.write(image_names[i]+" "+image_names[j]+"\n")
         
         #feature matching
-        bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+        bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
         matches = bf.match(descriptors[i], descriptors[j])
         
@@ -115,10 +116,12 @@ def main(enc, out_dir):
 
     f.close()
     
-    
 """   
 Example:
-python generate_sfm_data_decoder.py --path foutain_encoded_descr.txt --out sfm_data
+
+python generate_sfm_data_decoder.py --enc foutain_encoded_descr.txt --out ~/data/compressed/sfm_data_fountain
+
+python generate_sfm_data_decoder.py --enc tiso_encoded_descr.txt --out sfm_data_tiso
 """
 if __name__ == "__main__":
     
