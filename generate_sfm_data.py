@@ -61,9 +61,8 @@ def main(path, out_dir):
     descriptors = []
     keypoints = []
     
-    # Create SURF object with Hessian Threshold=600, 128 values (extended) 
-    surf = cv2.xfeatures2d.SURF_create(600)
-    #surf.setExtended(True)
+    # Create SURF object
+    surf = cv2.xfeatures2d.SURF_create()
     
     for entry in os.scandir(path):
         if (entry.path.endswith(".jpg") or entry.path.endswith(".png")) and entry.is_file():
@@ -111,9 +110,9 @@ def main(path, out_dir):
 """
 running example for test datasets:
 
-python generate_sfm_data.py --path ~/data/fountain-P11/images --out fountain_sfm_data
+python generate_sfm_data.py --path ~/data/fountain-P11/images --out sfm_data_fountain
 
-python generate_sfm_data.py --path ~/data/tisoDataset --out tiso_sfm_data
+python generate_sfm_data.py --path ~/data/tisoDataset --out sfm_data_tiso
 
 """
 
