@@ -52,5 +52,15 @@ colmap mapper \
         --image_path $DATASET_PATH \
         --database_path $DATABASE_PATH \
         --output_path $OUTPUT_PATH
-        
+      
 echo Sfm dense reconstruction generated at $OUTPUT_PATH
+
+colmap model_analyzer \
+        --path $OUTPUT_PATH/0 
+
+colmap model_converter \
+        --input_path $OUTPUT_PATH/0 \
+        --output_path $OUTPUT_PATH/sparse.ply \
+        --output_type PLY
+        
+echo PLY file generated at $OUTPUT_PATH/sparse.ply

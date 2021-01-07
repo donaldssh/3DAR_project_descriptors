@@ -59,7 +59,7 @@ def main(enc, out_dir):
     
     # load the best model for the decoder
     decoder = DecoderConv(encoded_space_dim=16, conv1_ch=126, conv2_ch=99, conv3_ch=106, fc_ch=59)
-    decoder.load_state_dict(torch.load('best_decoderCNN16_big.torch'))
+    decoder.load_state_dict(torch.load('best_decoderCNN16_final.torch'))
     decoder.to(device)
     decoder.eval()
 
