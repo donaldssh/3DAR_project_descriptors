@@ -24,7 +24,7 @@ def main(path, out):
     
     # load the best model for the encoder
     encoder = EncoderConv(encoded_space_dim=16, conv1_ch=126, conv2_ch=99, conv3_ch=106, fc_ch=59)
-    encoder.load_state_dict(torch.load('best_encoderCNN16_big.torch'))
+    encoder.load_state_dict(torch.load('best_encoderCNN16_final.torch'))
     encoder.to(device)
     encoder.eval()
     
